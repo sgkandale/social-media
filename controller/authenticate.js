@@ -1,6 +1,7 @@
-const { getUser } = require('../model/getUser')
+const { getUser } = require('../model/user')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const { ACCESS_TOKEN_SECRET } = require('../config/tokenSecret')
 
 const verifyPassword = (password, hash) => {
     return new Promise((resolve, reject) => {
@@ -14,17 +15,18 @@ const verifyPassword = (password, hash) => {
     })
 }
 
-const authenticate = (req, res) => {
+const authenticate = async (req, res) => {
     // get request body
-    const { username, password } = req.body;
-    if (!username || !password) {
+    const { email, password } = req.body;
+    if (!email || !password) {
         res.status(400).send({
             error: 'username and password are required'
         })
+        return
     }
 
     // get user from database
-    getUser(username, password)
+    getUser(email)
         .then(user => {
             if (user.length > 0) {
                 // compare password
@@ -33,13 +35,14 @@ const authenticate = (req, res) => {
                         if (result) {
                             // if password matches, return jwt
                             const token = jwt.sign({
-                                username: username,
+                                email: email,
                                 id: user[0].id
-                            }, "token_signing_key", {
+                            }, ACCESS_TOKEN_SECRET, {
                                 expiresIn: '1h'
                             })
                             res.status(200).send({
-                                token: token
+                                token: token,
+                                format: 'Bearer {token}',
                             })
                         } else {
                             // if password doesn't match, return error
