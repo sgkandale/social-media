@@ -9,6 +9,12 @@ Social networking site in NodeJS
 - [Express](https://expressjs.com/)
 - [PostgreSQL](https://www.postgresql.org/)
 
+### Default Users
+- john@doe.com  
+  johndoekapassword
+- jane@doe.com  
+  janedoekapassword
+
 
 ### Endpoints:
 
