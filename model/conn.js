@@ -2,7 +2,7 @@ const Pool = require('pg').Pool
 
 const pgpool = new Pool({
     ssl: { rejectUnauthorized: false },
-    connectionString: process.env.PG_STRING
+    connectionString: process.env.DATABASE_URL
 })
 
 module.exports = {
