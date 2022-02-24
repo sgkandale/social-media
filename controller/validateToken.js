@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken')
-const { ACCESS_TOKEN_SECRET } = require('../config/tokenSecret')
 
 const validateToken = (req, res, next) => {
     const authHeader = req.headers['authorization']
@@ -17,7 +16,7 @@ const validateToken = (req, res, next) => {
         })
     }
 
-    jwt.verify(splitToken[1], ACCESS_TOKEN_SECRET, (err, user) => {
+    jwt.verify(splitToken[1], process.env.ACCESS_TOKEN_SECRET, (err, user) => {
         if (err) {
             return res.status(403).json({
                 error: 'invalid token'

@@ -1,7 +1,6 @@
 const { getUser } = require('../model/user')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { ACCESS_TOKEN_SECRET } = require('../config/tokenSecret')
 
 const verifyPassword = (password, hash) => {
     return new Promise((resolve, reject) => {
@@ -37,9 +36,9 @@ const authenticate = async (req, res) => {
                             const token = jwt.sign({
                                 email: email,
                                 id: user[0].id
-                            }, ACCESS_TOKEN_SECRET, {
-                                expiresIn: '1h'
-                            })
+                            },
+                                process.env.ACCESS_TOKEN_SECRET,
+                                { expiresIn: '1h' })
                             res.status(200).send({
                                 token: token,
                                 format: 'Bearer {token}',
@@ -52,7 +51,6 @@ const authenticate = async (req, res) => {
                         }
                     })
                     .catch(error => {
-                        console.log("error : ", error)
                         res.status(500).json({
                             error: error
                         })
